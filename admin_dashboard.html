@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#FF4C29', // Vibrant orange-red
+                        secondary: '#2C3E50', // Dark blue-gray
+                        dark: '#0f172a',
+                        card: '#1e293b',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark text-white font-sans min-h-screen">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden flex items-center justify-between p-4 glass-nav border-b border-white/10 sticky top-0 z-50">
+        <h1 class="text-xl font-bold tracking-tight text-white app-company-name">ADMIN <span
+                class="text-primary">DASHBOARD</span></h1>
+        <button onclick="toggleSidebar()" class="p-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/80 z-30 hidden md:hidden glass-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside id="admin-sidebar"
+        class="fixed inset-y-0 left-0 w-64 glass-card border-r border-white/10 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col h-full bg-dark/95 backdrop-blur-xl">
+        <div class="h-20 flex items-center px-6 border-b border-white/10">
+            <h1 class="text-xl font-bold tracking-tight text-white app-company-name">ADMIN <span
+                    class="text-primary">DASHBOARD</span></h1>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="admin_dashboard.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/20 text-primary font-medium">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Dashboard
+            </a>
+            <a href="admin_dashboard.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                Orders
+            </a>
+            <a href="admin_customers.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                Customers
+            </a>
+            <a href="admin_config.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                Site Config
+            </a>
+            <a href="admin_products.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="package" class="w-5 h-5"></i>
+                Manage Products
+            </a>
+        </nav>
+        <div class="p-4 border-t border-white/10">
+            <button onclick="logout()"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-lg hover:bg-red-500/10 text-red-500 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:ml-64 p-4 md:p-8 pt-8 md:pt-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-white">Order Dashboard</h2>
+                <p class="text-gray-400">Manage incoming orders and status.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-white/5 p-2 rounded-full relative">
+                    <i data-lucide="bell" class="w-6 h-6 text-gray-400"></i>
+                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-dark"></span>
+                </div>
+                <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-yellow-500 flex items-center justify-center font-bold">
+                    A</div>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card p-6 rounded-2xl border border-white/10">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Orders</p>
+                        <h3 class="text-3xl font-bold text-white mt-1" id="total-orders-count">0</h3>
+                    </div>
+                    <div class="p-3 bg-blue-500/20 rounded-lg text-blue-500">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-green-500 flex items-center gap-1">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> +12% from last week
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-white/10">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Revenue</p>
+                        <h3 class="text-3xl font-bold text-white mt-1" id="total-revenue">Rs. 0</h3>
+                    </div>
+                    <div class="p-3 bg-green-500/20 rounded-lg text-green-500">
+                        <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-green-500 flex items-center gap-1">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> +8% from last week
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-white/10">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm" id="pending-orders-label">Pending Orders</p>
+                        <h3 class="text-3xl font-bold text-white mt-1" id="pending-orders-count">0</h3>
+                    </div>
+                    <div class="p-3 bg-orange-500/20 rounded-lg text-orange-500">
+                        <i data-lucide="clock" class="w-6 h-6" id="pending-orders-icon"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-green-500 flex items-center gap-1">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> Profit Margin
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="font-bold text-lg">Recent Orders</h3>
+                <button onclick="resetData()" class="text-sm text-red-500 hover:text-red-400">Reset Demo Data</button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 text-gray-400 text-sm uppercase font-medium">
+                        <tr>
+                            <th class="px-6 py-4">Order ID</th>
+                            <th class="px-6 py-4">Customer</th>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Items</th>
+                            <th class="px-6 py-4">Total</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5 text-sm" id="orders-table-body">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="empty-state" class="hidden p-12 text-center text-gray-500">
+                <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
+                <p>No orders found yet.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // Check Authentication
+        if (!localStorage.getItem('rubik_admin_session')) {
+            window.location.href = 'admin_login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('rubik_admin_session');
+            window.location.href = 'admin_login.html';
+        }
+
+        function resetData() {
+            if (confirm('Are you sure you want to clear all order history? This cannot be undone.')) {
+                localStorage.removeItem('rubik_orders');
+                location.reload();
+            }
+        }
+
+        function renderOrders() {
+            const orders = JSON.parse(localStorage.getItem('rubik_orders')) || [];
+            const tbody = document.getElementById('orders-table-body');
+            const emptyState = document.getElementById('empty-state');
+
+            // Load products to get cost price
+            const products = JSON.parse(localStorage.getItem('rubik_products')) || [];
+
+            // Update Stats
+            document.getElementById('total-orders-count').textContent = orders.length;
+
+            let totalRevenue = 0;
+            let totalCost = 0;
+            let pendingCount = 0;
+
+            orders.forEach(order => {
+                // Only count revenue for approved orders or initial pending orders?
+                // For simplicity, let's show potential revenue from all non-rejected orders
+                if (order.status !== 'rejected') {
+                    totalRevenue += (order.total || 0);
+
+                    // Calculate Cost for this order
+                    if (order.items) {
+                        order.items.forEach(item => {
+                            const product = products.find(p => p.id === item.id);
+                            const costPrice = product ? (product.costPrice || 0) : 0;
+                            totalCost += (costPrice * item.quantity);
+                        });
+                    }
+                }
+
+                if (!order.status || order.status === 'pending') {
+                    pendingCount++;
+                }
+            });
+
+            const totalProfit = totalRevenue - totalCost;
+
+            document.getElementById('total-revenue').innerText = `Rs. ${totalRevenue.toLocaleString()}`;
+            document.getElementById('pending-orders-count').innerText = pendingCount;
+            document.getElementById('pending-orders-label').innerText = "Pending Orders";
+            document.getElementById('pending-orders-icon').setAttribute('data-lucide', 'clock');
+
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            tbody.innerHTML = orders.map((order, index) => {
+                const date = order.date ? new Date(order.date).toLocaleDateString() : 'N/A';
+                const status = order.status || 'pending';
+
+                let statusColor = 'bg-yellow-500/20 text-yellow-500 border-yellow-500/20';
+                if (status === 'approved') statusColor = 'bg-green-500/20 text-green-500 border-green-500/20';
+                if (status === 'rejected') statusColor = 'bg-red-500/20 text-red-500 border-red-500/20';
+
+                return `
+                <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                    <td class="px-6 py-4 font-medium text-white">
+                        <span class="text-xs text-gray-500 block">#${index + 1}</span>
+                        ${order.id}
+                    </td>
+                    <td class="px-6 py-4 text-white">
+                        <div class="font-medium">${order.customer.name}</div>
+                        <div class="text-xs text-gray-400">${order.customer.mobile1}</div>
+                        <div class="text-[10px] text-gray-500 truncate w-32">${order.customer.address}</div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-400 text-xs">
+                        ${date}
+                    </td>
+                    <td class="px-6 py-4 text-gray-300 text-sm">
+                        <div class="flex flex-col gap-1">
+                            ${order.items.map(i => `<span class="text-xs text-gray-400">• ${i.name} x${i.quantity}</span>`).join('')}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-bold text-primary">
+                        Rs. ${order.total.toLocaleString()}
+                    </td>
+                    <td class="px-6 py-4">
+                        <select onchange="updateStatus(${index}, this.value)" 
+                            class="text-xs font-medium border rounded-full px-2 py-1 outline-none cursor-pointer bg-transparent ${statusColor}">
+                            <option value="pending" class="bg-gray-800 text-yellow-500" ${status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="approved" class="bg-gray-800 text-green-500" ${status === 'approved' ? 'selected' : ''}>Approved</option>
+                            <option value="rejected" class="bg-gray-800 text-red-500" ${status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                        </select>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteOrder(${index})" class="text-red-500 hover:text-red-400 p-2 rounded-lg hover:bg-white/5 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+            `}).join('');
+
+            lucide.createIcons();
+        }
+
+        function updateStatus(index, newStatus) {
+            const orders = JSON.parse(localStorage.getItem('rubik_orders')) || [];
+            if (index >= 0 && index < orders.length) {
+                orders[index].status = newStatus;
+                localStorage.setItem('rubik_orders', JSON.stringify(orders));
+                renderOrders(); // Re-render to update colors/styles
+            }
+        }
+
+        function deleteOrder(index) {
+            if (confirm('Delete this order?')) {
+                const orders = JSON.parse(localStorage.getItem('rubik_orders')) || [];
+                orders.splice(index, 1);
+                localStorage.setItem('rubik_orders', JSON.stringify(orders));
+                renderOrders();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderOrders();
+
+            // Auto-refresh orders every 5 seconds
+            setInterval(() => {
+                renderOrders();
+            }, 5000);
+        });
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/data.js"></script>
+</body>
+
+</html>

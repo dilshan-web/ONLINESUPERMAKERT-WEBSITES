@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Config</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#FF4C29',
+                        secondary: '#2C3E50',
+                        dark: '#0f172a',
+                        card: '#1e293b',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark text-white font-sans min-h-screen">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden flex items-center justify-between p-4 glass-nav border-b border-white/10 sticky top-0 z-50">
+        <h1 class="text-xl font-bold tracking-tight text-white app-company-name">ADMIN <span
+                class="text-primary">PANEL</span></h1>
+        <button onclick="toggleSidebar()" class="p-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/80 z-30 hidden md:hidden glass-backdrop"></div>
+
+    <!-- Sidebar -->
+    <aside id="admin-sidebar"
+        class="fixed inset-y-0 left-0 w-64 glass-card border-r border-white/10 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col h-full bg-dark/95 backdrop-blur-xl">
+        <div class="h-20 flex items-center px-6 border-b border-white/10">
+            <h1 class="text-xl font-bold tracking-tight text-white app-company-name">ADMIN <span
+                    class="text-primary">PANEL</span></h1>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="admin_dashboard.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Dashboard
+            </a>
+            <a href="admin_config.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/20 text-primary font-medium">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                Site Config
+            </a>
+            <a href="admin_products.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="package" class="w-5 h-5"></i>
+                Manage Products
+            </a>
+        </nav>
+        <div class="p-4 border-t border-white/10">
+            <button onclick="logout()"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-lg hover:bg-red-500/10 text-red-500 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:ml-64 p-4 md:p-8 pt-8 md:pt-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-white">Site Configuration</h2>
+                <p class="text-gray-400">Update company details, delivery fees, and about section.</p>
+            </div>
+            <button onclick="saveChanges()"
+                class="bg-primary hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg flex items-center gap-2">
+                <i data-lucide="save" class="w-5 h-5"></i> Save Changes
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Company Info -->
+            <div class="glass-card p-6 rounded-2xl border border-white/10">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="building"
+                        class="w-5 h-5 text-primary"></i> Company Details</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Company Name</label>
+                        <input type="text" id="company-name"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Mobile 1</label>
+                        <input type="text" id="company-mobile1"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Mobile 2</label>
+                        <input type="text" id="company-mobile2"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Email</label>
+                        <input type="text" id="company-email"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Address</label>
+                        <input type="text" id="company-address"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Company Logo</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="company-logo"
+                                class="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800"
+                                placeholder="URL or Upload...">
+                            <label
+                                class="cursor-pointer bg-primary hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                                <i data-lucide="upload" class="w-4 h-4"></i>
+                                <input type="file" id="logo-file" accept="image/*" class="hidden"
+                                    onchange="handleLogoUpload(this)">
+                            </label>
+                        </div>
+                        <div id="logo-preview" class="mt-2 hidden">
+                            <img src="" class="h-12 object-contain bg-white/10 p-1 rounded">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Security -->
+            <div class="glass-card p-6 rounded-2xl border border-white/10">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="lock"
+                        class="w-5 h-5 text-primary"></i> Admin Security</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">New Password</label>
+                        <input type="password" id="admin-pass"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800"
+                            placeholder="Leave empty to keep current">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Fees -->
+            <div class="glass-card p-6 rounded-2xl border border-white/10 h-fit">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="truck"
+                        class="w-5 h-5 text-primary"></i> Delivery Settings</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Inner City Fee (Rs)</label>
+                        <input type="number" id="fee-city"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Outstation Fee (Rs)</label>
+                        <input type="number" id="fee-out"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="glass-card p-6 rounded-2xl border border-white/10 md:col-span-2">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="info"
+                        class="w-5 h-5 text-primary"></i> About Section (Homepage)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-1">Title</label>
+                            <input type="text" id="about-title"
+                                class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-1">Founded Year/Date</label>
+                            <input type="text" id="company-founded" placeholder="e.g. 2020"
+                                class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-1">About Image</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="about-image"
+                                    class="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800"
+                                    placeholder="Image URL or Upload">
+                                <label
+                                    class="cursor-pointer bg-primary hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <input type="file" id="about-image-file" accept="image/*" class="hidden"
+                                        onchange="handleAboutImageUpload(this)">
+                                </label>
+                            </div>
+                            <div id="about-image-preview" class="mt-2 hidden">
+                                <img src="" class="h-20 w-auto object-cover rounded border border-white/10 bg-black/20">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Description</label>
+                        <textarea id="about-desc" rows="8"
+                            class="w-full h-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="glass-card p-6 rounded-2xl border border-white/10 md:col-span-2">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="share-2"
+                        class="w-5 h-5 text-primary"></i> Social Media Links</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Facebook</label>
+                        <input type="text" id="social-facebook"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">YouTube</label>
+                        <input type="text" id="social-youtube"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">TikTok</label>
+                        <input type="text" id="social-tiktok"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Instagram</label>
+                        <input type="text" id="social-instagram"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white bg-slate-800">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Slider Manager -->
+            <div class="glass-card p-6 rounded-2xl border border-white/10 md:col-span-2">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="images"
+                        class="w-5 h-5 text-primary"></i> Hero Slider Manager</h3>
+
+                <!-- Add New Slide -->
+                <div class="bg-white/5 p-4 rounded-xl mb-6 border border-white/10">
+                    <h4 class="text-sm font-bold text-gray-300 mb-3">Add New Slide</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex gap-2">
+                                <input type="text" id="slide-img" placeholder="Image URL"
+                                    class="flex-1 bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                                <label
+                                    class="cursor-pointer bg-primary/20 hover:bg-primary/40 text-primary px-3 py-2 rounded-lg flex items-center justify-center">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <input type="file" accept="image/*" class="hidden"
+                                        onchange="handleSlideUpload(this)">
+                                </label>
+                            </div>
+                            <div id="slide-preview-container" class="hidden">
+                                <img id="slide-preview-img" src=""
+                                    class="h-20 w-auto object-cover rounded border border-white/10 bg-black/20">
+                            </div>
+                        </div>
+                        <div>
+                            <input type="text" id="slide-offer" placeholder="Offer Text (e.g. 50% OFF)"
+                                class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        </div>
+                        <div>
+                            <input type="text" id="slide-title" placeholder="Title (e.g. Summer Sale)"
+                                class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+                        </div>
+                    </div>
+                    <button onclick="addSlide()"
+                        class="bg-primary hover:bg-orange-600 text-white text-sm px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Add Slide
+                    </button>
+                </div>
+
+                <!-- Slides List -->
+                <div class="space-y-3" id="slides-list">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Testimonials Manager Removed as per user request -->
+
+        </div>
+    </main>
+
+    <!-- Toast -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <script src="assets/js/data.js"></script>
+    <script>
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Check auth
+            if (!localStorage.getItem('rubik_admin_session')) {
+                window.location.href = 'admin_login.html';
+            }
+
+            loadValues();
+        });
+
+        function loadValues() {
+            const config = window.rubikConfig;
+
+            document.getElementById('company-name').value = config.company.name;
+            document.getElementById('company-mobile1').value = config.company.mobile1;
+            document.getElementById('company-mobile2').value = config.company.mobile2;
+            document.getElementById('company-email').value = config.company.email;
+            document.getElementById('company-address').value = config.company.address;
+            document.getElementById('company-logo').value = config.company.logo || '';
+
+            if (config.company.logo) {
+                const preview = document.getElementById('logo-preview');
+                preview.classList.remove('hidden');
+                preview.querySelector('img').src = config.company.logo;
+            }
+
+            document.getElementById('fee-city').value = config.delivery.cityFee;
+            document.getElementById('fee-out').value = config.delivery.outstationFee;
+
+            document.getElementById('about-title').value = config.company.aboutTitle;
+            document.getElementById('about-desc').value = config.company.aboutDesc;
+
+            // Social
+            if (!config.social) config.social = {}; // Safety
+            document.getElementById('social-facebook').value = config.social.facebook || '';
+            document.getElementById('social-youtube').value = config.social.youtube || '';
+            document.getElementById('social-tiktok').value = config.social.tiktok || '';
+            document.getElementById('social-instagram').value = config.social.instagram || '';
+
+            renderSlides();
+        }
+
+        function renderSlides() {
+            const container = document.getElementById('slides-list');
+            const slides = window.rubikConfig.heroSlides || [];
+
+            if (slides.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 text-sm text-center py-4">No slides added yet.</div>';
+                return;
+            }
+
+            container.innerHTML = slides.map((slide, index) => `
+                <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-white/5 group">
+                    <img src="${slide.image}" class="w-16 h-10 object-cover rounded bg-gray-800" onerror="this.src='https://via.placeholder.com/150'">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white text-sm font-medium truncate">${slide.title || 'No Title'}</p>
+                        <p class="text-primary text-xs truncate">${slide.offer || 'No Offer'}</p>
+                    </div>
+                    <button onclick="deleteSlide(${index})" class="text-red-500 hover:text-red-400 p-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // --- Slider Upload Logic ---
+        function handleSlideUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('slide-img').value = e.target.result;
+                    // Show Preview
+                    const previewContainer = document.getElementById('slide-preview-container');
+                    const previewImg = document.getElementById('slide-preview-img');
+                    if (previewContainer && previewImg) {
+                        previewImg.src = e.target.result;
+                        previewContainer.classList.remove('hidden');
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addSlide() {
+            const img = document.getElementById('slide-img').value;
+            const offer = document.getElementById('slide-offer').value;
+            const title = document.getElementById('slide-title').value;
+
+            if (!img) {
+                showToast('Image URL is required');
+                return;
+            }
+
+            if (!window.rubikConfig.heroSlides) window.rubikConfig.heroSlides = [];
+
+            window.rubikConfig.heroSlides.push({
+                image: img,
+                offer: offer,
+                title: title
+            });
+
+            // Clear inputs and preview
+            document.getElementById('slide-img').value = '';
+            document.getElementById('slide-offer').value = '';
+            document.getElementById('slide-title').value = '';
+            const previewContainer = document.getElementById('slide-preview-container');
+            if (previewContainer) previewContainer.classList.add('hidden');
+
+            renderSlides();
+
+            try {
+                saveChanges(true); // Auto-save
+                showToast('Slide Added Successfully!');
+            } catch (e) {
+                alert("Storage is full! Please delete some slides or use smaller images.");
+                // Revert push
+                window.rubikConfig.heroSlides.pop();
+                renderSlides();
+            }
+        }
+
+        function deleteSlide(index) {
+            if (confirm('Remove this slide?')) {
+                window.rubikConfig.heroSlides.splice(index, 1);
+                renderSlides();
+                saveChanges(true); // Auto-save
+            }
+        }
+
+        function saveChanges(silent = false) {
+            const config = window.rubikConfig;
+
+            config.company.name = document.getElementById('company-name').value;
+            config.company.mobile1 = document.getElementById('company-mobile1').value;
+            config.company.mobile2 = document.getElementById('company-mobile2').value;
+            config.company.email = document.getElementById('company-email').value;
+            config.company.address = document.getElementById('company-address').value;
+            config.company.logo = document.getElementById('company-logo').value;
+            config.company.founded = document.getElementById('company-founded').value;
+
+            config.delivery.cityFee = parseInt(document.getElementById('fee-city').value) || 0;
+            config.delivery.outstationFee = parseInt(document.getElementById('fee-out').value) || 0;
+
+            config.company.aboutTitle = document.getElementById('about-title').value;
+            config.company.aboutDesc = document.getElementById('about-desc').value;
+            config.company.aboutImage = document.getElementById('about-image').value;
+
+            // Social
+            if (!config.social) config.social = {};
+            config.social.facebook = document.getElementById('social-facebook').value;
+            config.social.youtube = document.getElementById('social-youtube').value;
+            config.social.tiktok = document.getElementById('social-tiktok').value;
+            config.social.instagram = document.getElementById('social-instagram').value;
+
+            // Password Change
+            const newPass = document.getElementById('admin-pass').value;
+            if (newPass) {
+                localStorage.setItem('rubik_admin_password', newPass);
+            }
+
+            window.saveConfig();
+            if (!silent) showToast('Configuration Saved!');
+            document.getElementById('admin-pass').value = '';
+
+            if (typeof updateSiteContent === 'function') updateSiteContent();
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'bg-green-600 text-white px-6 py-4 rounded-lg shadow-2xl transform translate-y-10 opacity-0 transition-all duration-300 flex items-center gap-3';
+            toast.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i><span>${message}</span>`;
+            document.getElementById('toast-container').appendChild(toast);
+            lucide.createIcons({ root: toast });
+
+            setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function handleLogoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('company-logo').value = e.target.result;
+                    const preview = document.getElementById('logo-preview');
+                    preview.classList.remove('hidden');
+                    preview.querySelector('img').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function handleAboutImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('about-image').value = e.target.result;
+                    const preview = document.getElementById('about-image-preview');
+                    if (preview) {
+                        preview.classList.remove('hidden');
+                        preview.querySelector('img').src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('rubik_admin_session');
+            window.location.href = 'admin_login.html';
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>
